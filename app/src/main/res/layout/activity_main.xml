@@ -89,7 +89,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Existing GridLayout Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/gridContainer"
             android:layout_width="381dp"

@@ -1,17 +1,9 @@
 package com.example.weighttracker;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -22,20 +14,58 @@ import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int SMS_PERMISSION_REQUEST_CODE = 1001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        ImageButton notificationButton = findViewById(R.id.notificationButton);
+        notificationButton.setOnClickListener(v -> sendNotificationSMS());
     }
 
-    public void onClick(View view)
-    {
+    private void sendNotificationSMS() {
+        // Check if SEND_SMS permission is granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            // If permission is not granted, request it
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.SEND_SMS},
+                    SMS_PERMISSION_REQUEST_CODE
+            );
+        } else {
+            // Permission granted, proceed with sending SMS
+            sendSMSMessage();
+        }
+    }
 
+    private void sendSMSMessage() {
+        String phoneNumber = "1234567890"; // Replace with the recipient's phone number
+        String message = "This is a notification message!";
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(this, "weight+goal notif will go here.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to send SMS. Check permissions: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with sending SMS
+                sendSMSMessage();
+            } else {
+                // Permission denied
+                Toast.makeText(this, "SMS permission denied. Cannot send notifications.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
