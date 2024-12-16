@@ -6,4 +6,16 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="user_greeting">Your daily weight stats are below:</string>
+    <string name="date">Date</string>
+    <string name="weight">Weight</string>
+    <string name="add_new_weight">Add new weight.</string>
+    <string name="add">Add</string>
+    <string name="edit_current_weight">Edit current weight.</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="notifications">Notifications</string>
+    <string name="enable_notifications_for_goal_weight_reached">Enable notifications for goal weight reached.</string>
+    <string name="delete_current_entry">Delete current entry.</string>
+    <string name="goal_met">Goal Met?</string>
+    <string name="goal_weight_70kg">Goal Weight:</string>
 </resources>
