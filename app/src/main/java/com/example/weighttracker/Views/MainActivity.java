@@ -1,4 +1,4 @@
-package com.example.weighttracker;
+package com.example.weighttracker.Views;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import com.example.weighttracker.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

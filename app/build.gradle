@@ -34,8 +34,11 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
-    implementation("com.google.android.material:material:1.12.0") //Used for Material Icon packs
+    implementation("com.google.android.material:material:1.12.0")
+    implementation libs.room.common
+    implementation libs.room.runtime//Used for Material Icon packs
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    annotationProcessor libs.room.compiler
 }

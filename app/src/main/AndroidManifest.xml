@@ -21,7 +21,7 @@
 
         <!-- Login Activity -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".Views.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
 
         <!-- Main Activity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".Views.MainActivity"
             android:exported="true" />
     </application>
 </manifest>
