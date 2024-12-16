@@ -18,4 +18,5 @@
     <string name="delete_current_entry">Delete current entry.</string>
     <string name="goal_met">Goal Met?</string>
     <string name="goal_weight_70kg">Goal Weight:</string>
+    <string name="edit_goal_weight">Edit goal weight.</string>
 </resources>

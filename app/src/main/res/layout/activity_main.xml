@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green"
-    tools:context=".MainActivity">
+    tools:context=".Views.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,14 +28,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/goalWeightText"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="@string/goal_weight_70kg"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/goalWeightText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/goal_weight_70kg"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/editGoalWeightButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/edit_goal_weight"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_edit" />
+            </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Existing mainGridEntry with adjusted height -->
@@ -50,13 +66,13 @@
             app:layout_constraintTop_toBottomOf="@id/goalWeightCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.62">
+            app:layout_constraintHeight_percent="0.6">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <!-- Headers Row -->
                 <com.google.android.material.textview.MaterialTextView
@@ -65,15 +81,17 @@
                     android:layout_height="wrap_content"
                     android:text="@string/date"
                     android:textStyle="bold"
+                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.3" />
+                    app:layout_constraintWidth_percent="0.39" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/WeightHeader"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/weight"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/dateHeader"
                     app:layout_constraintTop_toTopOf="parent"
@@ -84,10 +102,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/goal_met"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.3" />
+                    app:layout_constraintWidth_percent="0.21" />
 
                 <!-- RecyclerView for Grid Data -->
                 <androidx.recyclerview.widget.RecyclerView
@@ -159,7 +178,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/calendarButton"
+                        android:id="@+id/editButton"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:background="@color/material_dynamic_neutral30"
