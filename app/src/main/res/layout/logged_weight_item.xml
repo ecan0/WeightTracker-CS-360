@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- LinearLayout to hold the logged weight item -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- TextView to display the date of the logged weight -->
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="0dp"
@@ -13,6 +15,7 @@
         android:textColor="@color/white"
         android:text="@string/date" />
 
+    <!-- TextView to display the weight -->
     <TextView
         android:id="@+id/weightTextView"
         android:layout_width="0dp"
@@ -21,6 +24,7 @@
         android:textColor="@color/white"
         android:text="@string/weight" />
 
+    <!-- TextView to display if the goal was met -->
     <TextView
         android:id="@+id/goalMetTextView"
         android:layout_width="0dp"

@@ -25,30 +25,47 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+//FINAL PROJECT SUBMISSION: Weight Tracker App
+//Eric Candela
+//Bachelor of Science in Computer Science, SNHU
+//CS 360: Mobile Architecture and Programming
+//December 15, 2024
+
 public class MainActivity extends AppCompatActivity {
 
+    // Request code for SMS permission
     private static final int SMS_PERMISSION_REQUEST_CODE = 1001;
+
+    // UI elements
     private TextView goalWeightText;
-    private UserDatabase userDatabase;
-    private User user;
     private LoggedWeightAdapter adapter;
+
+    // Database instances
+    private UserDatabase userDatabase;
     private LoggedWeightDatabase loggedWeightDatabase;
+
+    // User data
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize UI elements
         goalWeightText = findViewById(R.id.goalWeightText);
+
+        // Initialize database instances
         userDatabase = UserDatabase.getInstance(this);
         loggedWeightDatabase = LoggedWeightDatabase.getDatabase(this);
 
-        // Initialize RecyclerView for LoggedWeight
+        // Initialize RecyclerView for displaying logged weights
         RecyclerView recyclerView = findViewById(R.id.dataRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LoggedWeightAdapter(new ArrayList<>()); // Initialize with an empty list
         recyclerView.setAdapter(adapter);
 
+        // Fetch logged weights and update UI
         fetchLoggedWeightsAndUpdateUI();
 
         // Fetch user data and update UI
@@ -57,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 if (user != null) {
                     if (user.goalWeight == 0) {
-                        promptForGoalWeight();
+                        promptForGoalWeight(); // Prompt user to set goal weight if not set
                     } else {
-                        updateGoalWeightText();
+                        updateGoalWeightText(); // Update goal weight text view
                     }
                 }
             });
@@ -70,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         editGoalWeightButton.setOnClickListener(v -> promptForGoalWeight());
 
         ImageButton notificationButton = findViewById(R.id.notificationButton);
-        notificationButton.setOnClickListener(v -> sendNotificationSMS());
+        notificationButton.setOnClickListener(v -> requestSmsPermission());
 
         ImageButton addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(v -> showWeightDialog(null));
@@ -96,10 +113,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Fetch logged weights and update UI
+    // Fetch logged weights from database and update UI
     private void fetchLoggedWeightsAndUpdateUI() {
         new Thread(() -> {
             List<LoggedWeight> loggedWeights = fetchLoggedWeights();
+            for (LoggedWeight weight : loggedWeights) {
+                weight.goalMet = (weight.weight == user.goalWeight); // Check if goal weight is met
+            }
             runOnUiThread(() -> adapter.updateData(loggedWeights));
         }).start();
     }
@@ -128,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Weight must be between 100 and 800 lbs.", Toast.LENGTH_LONG).show();
             } else {
                 if (loggedWeight == null) {
-                    addLoggedWeight(weight);
+                    addLoggedWeight(weight); // Add new weight
                 } else {
                     loggedWeight.weight = weight;
                     loggedWeight.goalMet = weight <= user.goalWeight;
-                    updateLoggedWeight(loggedWeight);
+                    updateLoggedWeight(loggedWeight); // Update existing weight
                 }
             }
         });
@@ -142,28 +162,38 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Add new logged weight
+    // Add new logged weight to database
     private void addLoggedWeight(int weight) {
-        LoggedWeight newWeight = new LoggedWeight();
-        newWeight.date = LocalDate.now().toString(); // Set the current date
-        newWeight.weight = weight;
-        newWeight.goalMet = weight <= user.goalWeight; // Set goalMet based on user goal weight
-
         new Thread(() -> {
-            loggedWeightDatabase.loggedWeightDao().insert(newWeight);
-            runOnUiThread(this::fetchLoggedWeightsAndUpdateUI);
+            LoggedWeight newWeight = new LoggedWeight();
+            newWeight.date = LocalDate.now().toString(); // Set the current date
+            newWeight.weight = weight;
+            newWeight.goalMet = (weight == user.goalWeight); // Check if goal weight is met
+            loggedWeightDatabase.loggedWeightDao().insert(newWeight); // Insert into database
+            runOnUiThread(() -> {
+                fetchLoggedWeightsAndUpdateUI(); // Fetch and update UI
+                if (newWeight.weight == user.goalWeight) {
+                    sendSmsNotification("Congratulations! You've reached your goal weight.");
+                }
+            });
         }).start();
     }
 
-    // Update existing logged weight
+    // Update existing logged weight in database
     private void updateLoggedWeight(LoggedWeight loggedWeight) {
         new Thread(() -> {
-            loggedWeightDatabase.loggedWeightDao().update(loggedWeight);
-            runOnUiThread(this::fetchLoggedWeightsAndUpdateUI);
+            loggedWeight.goalMet = (loggedWeight.weight == user.goalWeight); // Check if goal weight is met
+            loggedWeightDatabase.loggedWeightDao().update(loggedWeight); // Update in database
+            runOnUiThread(() -> {
+                fetchLoggedWeightsAndUpdateUI(); // Fetch and update UI
+                if (loggedWeight.weight == user.goalWeight) {
+                    sendSmsNotification("Congratulations! You've reached your goal weight.");
+                }
+            });
         }).start();
     }
 
-    // Delete logged weight
+    // Delete logged weight from database
     private void deleteLoggedWeight(LoggedWeight loggedWeight) {
         new Thread(() -> {
             loggedWeightDatabase.loggedWeightDao().delete(loggedWeight);
@@ -204,50 +234,37 @@ public class MainActivity extends AppCompatActivity {
         goalWeightText.setText(message);
     }
 
-    // Send notification SMS if goal weight is met
-    private void sendNotificationSMS() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.SEND_SMS},
-                    SMS_PERMISSION_REQUEST_CODE
-            );
+    // Request SMS permissions
+    private void requestSmsPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_REQUEST_CODE);
         } else {
-            sendSMSMessage();
+            Toast.makeText(this, "SMS notifications enabled.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Send SMS message
-    private void sendSMSMessage() {
-        if (user != null && user.goalWeight > 0) {
-            List<LoggedWeight> loggedWeights = fetchLoggedWeights();
-            for (LoggedWeight weight : loggedWeights) {
-                if (weight.goalMet) {
-                    String message = "Congratulations! You have met your goal weight of " + user.goalWeight + " lbs.";
-                    try {
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage("1234567890", null, message, null, null);
-                        Toast.makeText(this, "Notification sent.", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Failed to send SMS. Check permissions: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
+    // Handle the result of the permission request
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == SMS_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                sendSMSMessage();
+                Toast.makeText(this, "SMS notifications enabled.", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "SMS permission denied. Cannot send notifications.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "SMS permission denied.", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    // Send SMS notification
+    private void sendSmsNotification(String message) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+            SmsManager smsManager = SmsManager.getDefault();
+            // This is not used because we're not sending actual SMS over the network.
+            smsManager.sendTextMessage("1234567890", null, message, null, null);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            // There's no permission to send SMS, so we can't send the notification
         }
     }
 }

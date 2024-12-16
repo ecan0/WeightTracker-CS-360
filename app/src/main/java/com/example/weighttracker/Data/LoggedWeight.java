@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 public class LoggedWeight {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String date; // Use String for simplicity, you can use Date type with TypeConverters
+    public String date;
     public int weight;
     public boolean goalMet;
 }

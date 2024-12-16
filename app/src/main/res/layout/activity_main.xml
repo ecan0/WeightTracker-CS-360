@@ -8,13 +8,14 @@
     android:background="@color/green"
     tools:context=".Views.MainActivity">
 
+    <!-- Main container using ConstraintLayout for flexible positioning -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- New MaterialCardView for Goal Weight -->
+        <!-- CardView for displaying goal weight information -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/goalWeightCard"
             android:layout_width="match_parent"
@@ -28,19 +29,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <!-- RelativeLayout inside CardView for goal weight text and edit button -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
+                <!-- TextView to display the goal weight -->
                 <TextView
                     android:id="@+id/goalWeightText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/goal_weight_70kg"
                     android:textColor="@color/white"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
+                <!-- Button to edit the goal weight -->
                 <ImageButton
                     android:id="@+id/editGoalWeightButton"
                     android:layout_width="48dp"
@@ -54,7 +59,7 @@
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Existing mainGridEntry with adjusted height -->
+        <!-- CardView for displaying logged weights with headers and RecyclerView -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mainGridEntry"
             android:layout_width="match_parent"
@@ -66,15 +71,16 @@
             app:layout_constraintTop_toBottomOf="@id/goalWeightCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.6">
+            app:layout_constraintHeight_percent="0.625">
 
+            <!-- ConstraintLayout inside CardView for headers and RecyclerView -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray"
                 android:padding="12dp">
 
-                <!-- Headers Row -->
+                <!-- TextView for date header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/dateHeader"
                     android:layout_width="0dp"
@@ -86,6 +92,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.39" />
 
+                <!-- TextView for weight header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/WeightHeader"
                     android:layout_width="0dp"
@@ -97,6 +104,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.3" />
 
+                <!-- TextView for goal met header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/GoalMetHeader"
                     android:layout_width="0dp"
@@ -108,7 +116,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.21" />
 
-                <!-- RecyclerView for Grid Data -->
+                <!-- RecyclerView for displaying logged weights -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/dataRecyclerView"
                     android:layout_width="match_parent"
@@ -120,7 +128,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Existing gridContainer -->
+        <!-- CardView for action buttons (add, edit, delete, notifications) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/gridContainer"
             android:layout_width="match_parent"
@@ -133,6 +141,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHeight_percent="0.21">
 
+            <!-- GridLayout for arranging action buttons -->
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -144,6 +153,7 @@
                 android:rowCount="1"
                 android:useDefaultMargins="true">
 
+                <!-- LinearLayout for add button and label -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -151,6 +161,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <!-- Button to add a new weight entry -->
                     <ImageButton
                         android:id="@+id/addButton"
                         android:layout_width="80dp"
@@ -161,6 +172,7 @@
                         app:srcCompat="@android:drawable/ic_menu_add"
                         app:tint="@color/green" />
 
+                    <!-- Label for add button -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -170,6 +182,7 @@
                         android:textColor="@color/white" />
                 </LinearLayout>
 
+                <!-- LinearLayout for edit button and label -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -177,6 +190,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <!-- Button to edit the selected weight entry -->
                     <ImageButton
                         android:id="@+id/editButton"
                         android:layout_width="80dp"
@@ -187,6 +201,7 @@
                         android:src="@android:drawable/ic_menu_edit"
                         app:tint="@color/green" />
 
+                    <!-- Label for edit button -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -196,6 +211,7 @@
                         android:textColor="@color/white" />
                 </LinearLayout>
 
+                <!-- LinearLayout for delete button and label -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -203,6 +219,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <!-- Button to delete the selected weight entry -->
                     <ImageButton
                         android:id="@+id/deleteButton"
                         android:layout_width="80dp"
@@ -213,6 +230,7 @@
                         app:srcCompat="@android:drawable/ic_menu_delete"
                         app:tint="@color/green" />
 
+                    <!-- Label for delete button -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -222,6 +240,7 @@
                         android:textColor="@color/white" />
                 </LinearLayout>
 
+                <!-- LinearLayout for notifications button and label -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -229,6 +248,7 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
+                    <!-- Button to enable notifications for goal weight reached -->
                     <ImageButton
                         android:id="@+id/notificationButton"
                         android:layout_width="80dp"
@@ -239,6 +259,7 @@
                         app:srcCompat="@android:drawable/ic_popup_reminder"
                         app:tint="@color/green" />
 
+                    <!-- Label for notifications button -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
