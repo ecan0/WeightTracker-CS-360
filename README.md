@@ -4,10 +4,10 @@
 This project is a Weight Tracker application developed in Java using Android Studio. The application allows users to log in, track their weight, and visualize their progress over time.
 
 ## Demo
+
 <p float="left">
   <img src="https://github.com/ecan0/WeightTracker-CS-360/blob/main/loginPage.gif" width="45%" />
   <img src="https://github.com/ecan0/WeightTracker-CS-360/blob/main/MainWeightTrackerDemo.gif" width="45%" />
-</p>
 
 ## Technologies Used
 - Java
